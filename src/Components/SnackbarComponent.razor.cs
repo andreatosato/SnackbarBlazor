@@ -65,7 +65,6 @@ namespace SnackbarBlazor.Components
             hideTimer.Stop();
             hideTimer.Enabled = false;
             hideTimer = null;
-            GC.Collect();
         }
     }
 }
