@@ -1,0 +1,22 @@
+﻿@page "/"
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<table>
+    <tr>
+        <td><button @onclick="@(async () => { await snackbar.Show(); })">Snackbar</button></td>
+    </tr>
+    <tr>
+        <td><button @onclick="@(async () => { await SnackbarService.ShowAsync(); })">Snackbar Interface</button></td>
+    </tr>
+</table>
+
+<SnackbarComponent @ref="snackbar" Header="Sono l'header dello snackbar" Body="Sono il body, tra 10 secondi scomparirò"></SnackbarComponent>
+
+@code {
+    private SnackbarComponent snackbar;
+    [Inject]
+    private Services.ISnackbarService SnackbarService { get; set; }
+}
