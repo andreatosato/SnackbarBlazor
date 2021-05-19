@@ -13,10 +13,16 @@ Welcome to your new app.
     </tr>
 </table>
 
-<SnackbarComponent @ref="snackbar" Header="Sono l'header dello snackbar" Body="Sono il body, tra 10 secondi scomparirò"></SnackbarComponent>
+<SnackbarComponent @ref="snackbar" 
+                   Header="Sono l'header dello snackbar" 
+                   Body="Sono il body, tra 7 secondi scomparirò"
+                   Seconds="7">
+
+</SnackbarComponent>
 
 @code {
     private SnackbarComponent snackbar;
+
     [Inject]
     private Services.ISnackbarService SnackbarService { get; set; }
 }

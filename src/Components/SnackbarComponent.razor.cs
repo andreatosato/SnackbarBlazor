@@ -6,13 +6,16 @@ using System.Timers;
 
 namespace SnackbarBlazor.Components
 {
-    public partial class SnackbarComponent : ComponentBase
+    public partial class SnackbarComponent : ComponentBase, IDisposable
     {
         [Parameter]
         public string Header { get; set; }
 
         [Parameter]
         public string Body { get; set; }
+
+        [Parameter]
+        public int Seconds { get; set; } = 5;
 
         [Inject]
         public ISnackbarService SnackbarService { get; set; }
@@ -23,9 +26,8 @@ namespace SnackbarBlazor.Components
 
         protected override void OnInitialized()
         {
-            hideTimer = new Timer(TimeSpan.FromSeconds(10).TotalMilliseconds);
+            hideTimer = new Timer(TimeSpan.FromSeconds(Seconds).TotalMilliseconds);
             hideTimer.Elapsed += HideTimer_Elapsed;
-            hideTimer.Enabled = true;
             SnackbarService.Show += SnackbarService_Show;
         }
 
@@ -34,17 +36,18 @@ namespace SnackbarBlazor.Components
             await Show();
         }
 
-        private async void HideTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void HideTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (IsVisible)
             {
-                await Hide();
+                _ = Hide();
             }
         }
 
         public async Task Show()
         {
             IsVisible = true;
+            hideTimer.Enabled = true;
             hideTimer.Start();
             await InvokeAsync(StateHasChanged);
         }
@@ -52,7 +55,17 @@ namespace SnackbarBlazor.Components
         public async Task Hide()
         {
             IsVisible = false;
+            hideTimer.Stop();
+            hideTimer.Enabled = false;
             await InvokeAsync(StateHasChanged);
+        }
+
+        public void Dispose()
+        {
+            hideTimer.Stop();
+            hideTimer.Enabled = false;
+            hideTimer = null;
+            GC.Collect();
         }
     }
 }
